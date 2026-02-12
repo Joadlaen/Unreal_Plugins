@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "FPhys",
+	"Description": "A Simple 2D Physics Lib",
+	"Category": "Other",
+	"CreatedBy": "Patrick Merritt",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EngineVersion": "5.6.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "FPhys",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

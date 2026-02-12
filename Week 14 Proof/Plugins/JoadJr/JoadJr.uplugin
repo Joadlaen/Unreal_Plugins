@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "JoadJr",
+	"Description": "my first plugin",
+	"Category": "Other",
+	"CreatedBy": "Joadlaen",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "JoadJr",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

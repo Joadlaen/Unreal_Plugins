@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "Proof",
+			"Path": "..\\Source\\Proof.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "ProofEditor",
+			"Path": "..\\Source\\ProofEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
