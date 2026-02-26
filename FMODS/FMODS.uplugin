@@ -1,0 +1,28 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "FMODS",
+	"Description": "A collection of Tutorial mods",
+	"Category": "Other",
+	"CreatedBy": "Patrick Merritt",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EngineVersion": "5.6.0",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "FMODS",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "MySnapButton",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	]
+}
