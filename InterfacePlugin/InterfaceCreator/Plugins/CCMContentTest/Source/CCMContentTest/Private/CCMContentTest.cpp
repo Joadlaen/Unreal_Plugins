@@ -67,33 +67,7 @@ TSharedRef<SDockTab> FCCMContentTestModule::OnSpawnPluginTab(const FSpawnTabArgs
 	return SNew(SDockTab)
 		.TabRole(ETabRole::NomadTab)
 		[
-			SNew(SVerticalBox)
-				+ SVerticalBox::Slot()
-				.Padding(10, 10)
-				.MaxHeight(30)
-				[
-					SNew(SHorizontalBox)
-						+ SHorizontalBox::Slot()
-						.MaxWidth(200)
-						.VAlign(VAlign_Center)
-						[
-							SNew(STextBlock)
-
-								.Text(FText::FromString(TEXT("Colour Name")))
-						]
-
-					+ SHorizontalBox::Slot()
-						[
-							SNew(SEditableTextBox)
-								.Text(FText::FromString(""))
-								.HintText(LOCTEXT("CM_ColourName_Label", "Please provide a unique Colour name"))
-						]
-				]
-			+SVerticalBox::Slot()
-				.Padding(10, 10)
-				[
-					SNew(SCCMWidget)
-				]
+			SNew(SCCMWidget)
 		];
 }
 

@@ -19,5 +19,11 @@ public:
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
 
-	FText TestWidget() const;
+	FString ErrorMessage;
+	FString OutputPath;
+
+	FText DisplayErrors() const;
+	void SetColourName(const FText& Text, ETextCommit::Type CommitType);
+	void SetOutputPath(const FText& Text, ETextCommit::Type CommitType);
+
 };
