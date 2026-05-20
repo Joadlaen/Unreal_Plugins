@@ -8,6 +8,7 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Text/STextBlock.h"
 #include "ToolMenus.h"
+#include "SCCMWidget.h"
 
 static const FName CCMContentTestTabName("CCMContentTest");
 
@@ -87,6 +88,11 @@ TSharedRef<SDockTab> FCCMContentTestModule::OnSpawnPluginTab(const FSpawnTabArgs
 								.Text(FText::FromString(""))
 								.HintText(LOCTEXT("CM_ColourName_Label", "Please provide a unique Colour name"))
 						]
+				]
+			+SVerticalBox::Slot()
+				.Padding(10, 10)
+				[
+					SNew(SCCMWidget)
 				]
 		];
 }

@@ -7,11 +7,18 @@
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SCCMWidget::Construct(const FArguments& InArgs)
 {
-	/*
+	
 	ChildSlot
 	[
-		// Populate the widget
+		SNew(STextBlock)
+			.Text(this, &SCCMWidget::TestWidget)
 	];
-	*/
+	
 }
+
+FText SCCMWidget::TestWidget() const
+{
+	return FText::FromString(TEXT("Delegate Alive"));
+}
+
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
