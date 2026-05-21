@@ -6,7 +6,9 @@ public class CCMContentTest : ModuleRules
 {
 	public CCMContentTest(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+
+       
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
@@ -16,10 +18,11 @@ public class CCMContentTest : ModuleRules
 				
 		
 		PrivateIncludePaths.AddRange(
-			new string[] {
+			new string[] 
+			{
 				// ... add other private include paths required here ...
-			}
-			);
+            }
+            );
 			
 		
 		PublicDependencyModuleNames.AddRange(
@@ -43,6 +46,12 @@ public class CCMContentTest : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "KismetWidgets",
+				"Kismet",
+				"BlueprintGraph",
+				"PropertyEditor",
+				"EditorStyle",
+				"GraphEditor"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

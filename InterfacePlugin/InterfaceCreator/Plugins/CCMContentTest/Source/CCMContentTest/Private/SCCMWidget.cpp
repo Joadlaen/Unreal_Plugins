@@ -3,13 +3,40 @@
 
 #include "SCCMWidget.h"
 #include "SlateOptMacros.h"
+#include "Widgets/Input/SSpinbox.h"
+#include "AssetToolsModule.h"
+#include "Factories/MaterialInstanceConstantFactoryNew.h"
+#include "Materials/MaterialInstanceConstant.h"
+#include "ContentBrowserModule.h"
+#include "IContentBrowserSingleton.h"
+#include "EdGraphSchema_K2.h"
+
+#include "SCCMTypeSelector.h"
+#include "Widgets/Input/SComboButton.h"
+#include "Widgets/Layout/SBox.h"
+#include "Widgets/Text/STextBlock.h"
+#include "Framework/MultiBox/MultiBoxBuilder.h"
 
 #define LOCTEXT_NAMESPACE "FCCMContentTestModule"
+
+
+
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SCCMWidget::Construct(const FArguments& InArgs)
 {
-	
+
+    CurrentType = InArgs._CurrentType;
+    OnTypeChanged = InArgs._OnTypeChanged;
+
+    //FContentBrowserModule& CB = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
+    //IContentBrowserSingleton& CBS = CB.Get();
+    //FPathPickerConfig Config;
+
+    //Config.DefaultPath = "/Game";
+    //Config.OnPathSelected = FOnPathSelected::CreateSP(this, &SCCMWidget::OnFolderPicked);
+    //TSharedRef<SWidget> Picker = CBS.CreatePathPicker(Config);
+
     ChildSlot
         [
             SNew(SVerticalBox)
@@ -51,14 +78,120 @@ void SCCMWidget::Construct(const FArguments& InArgs)
                         ]
                 ]
             + SVerticalBox::Slot()
-                .Padding(FMargin(10, 10))
+                .Padding(10, 10)
                 [
                     SNew(STextBlock)
                         .Text(this, &SCCMWidget::DisplayErrors)
                 ]
+            +SVerticalBox::Slot()
+                .MaxHeight(30)
+                .Padding(10,10)
+                [
+                    SNew(SHorizontalBox)
+                        +SHorizontalBox::Slot()
+                        .MaxWidth(150)
+                        [
+                            SNew(SSpinBox<float>)
+                                .MinValue(0.0f)
+                                .MaxValue(255.0f)
+                                .MinSliderValue(0.0f)
+                                .MaxSliderValue(255.0f)
+                                .Delta(0.1f)
+                                .OnValueChanged(this, &SCCMWidget::SetRedColour)
+                        ]
+                    + SHorizontalBox::Slot()
+                        .MaxWidth(150)
+                        [
+                            SNew(SSpinBox<float>)
+                                .MinValue(0.0f)
+                                .MaxValue(255.0f)
+                                .MinSliderValue(0.0f)
+                                .MaxSliderValue(255.0f)
+                                .Delta(0.1f)
+                                .OnValueChanged(this, &SCCMWidget::SetGreenColour)
+                        ]
+                    + SHorizontalBox::Slot()
+                        .MaxWidth(150)
+                        [
+                            SNew(SSpinBox<float>)
+                                .MinValue(0.0f)
+                                .MaxValue(255.0f)
+                                .MinSliderValue(0.0f)
+                                .MaxSliderValue(255.0f)
+                                .Delta(0.1f)
+                                .OnValueChanged(this, &SCCMWidget::SetBlueColour)
+                        ]
+                ]
+            + SVerticalBox::Slot()
+                .Padding(10, 10)
+                .MaxHeight(30)
+                [
+                    SNew(SButton)
+                        .Text(FText::FromString("Make New Material"))
+                        .OnClicked(this, &SCCMWidget::CreateMaterial)
+                ]
+
+            + SVerticalBox::Slot()
+                .Padding(10, 10)
+                SNew(SComboButton)
+                .ButtonContent()
+                [
+                    SNew(STextBlock)
+                        .Text_Lambda([this]()
+                            {
+                                return FText::FromName(CurrentType.Get().PinCategory);
+                            })
+                ]
+            .MenuContent()
+                [
+                    GenerateMenu()
+                ]
+
+                SNew(SCCMTypeSelector)
+                .CurrentType(this, &SCCMWidget::GetSelectedType)
+                .OnTypeChanged(this, &SCCMWidget::OnTypeChanged)
+
         ];
 	
 }
+
+TSharedRef<SWidget> SCCMTypeSelector::GenerateMenu()
+{
+    FMenuBuilder MenuBuilder(true, nullptr);
+
+    const UEdGraphSchema_K2* Schema = GetDefault<UEdGraphSchema_K2>();
+
+    // Add common pin types
+    TArray<FName> Categories;
+    Schema->GetVariableTypeCategories(Categories);
+
+    for (FName Category : Categories)
+    {
+        MenuBuilder.AddMenuEntry(
+            FText::FromName(Category),
+            FText::FromString(""),
+            FSlateIcon(),
+            FUIAction(FExecuteAction::CreateSP(this, &SCCMTypeSelector::OnTypePicked, Category))
+        );
+    }
+
+    return MenuBuilder.MakeWidget();
+}
+
+FReply SCCMTypeSelector::OnTypePicked(FName Category)
+{
+    SelectedType.PinCategory = Category;
+
+    if (OnTypeChanged.IsBound())
+    {
+        OnTypeChanged.Execute(SelectedType);
+    }
+
+    return FReply::Handled();
+}
+
+
+
 
 FText SCCMWidget::DisplayErrors() const
 {
@@ -67,7 +200,9 @@ FText SCCMWidget::DisplayErrors() const
 
 void SCCMWidget::SetColourName(const FText& Text, ETextCommit::Type CommitType)
 {
-    ErrorMessage = Text.ToString();
+    ColourName = "MI_FC_" + Text.ToString();
+    ColourName = ColourName.Replace(TEXT(" "), TEXT(""));
+    ErrorMessage = ColourName;
 }
 
 void SCCMWidget::SetOutputPath(const FText& Text, ETextCommit::Type CommitType)
@@ -76,6 +211,64 @@ void SCCMWidget::SetOutputPath(const FText& Text, ETextCommit::Type CommitType)
     ErrorMessage = OutputPath;
 }
 
+void SCCMWidget::OnFolderPicked(const FString& NewPath)
+{
+    OutputPath = NewPath;
+    ErrorMessage = OutputPath;
+}
+
+void SCCMWidget::SetRedColour(float newValue)
+{
+    ColourToCreate.R = newValue;
+    ErrorMessage = ColourToCreate.ToString();
+}
+
+void SCCMWidget::SetGreenColour(float newValue)
+{
+    ColourToCreate.G = newValue;
+    ErrorMessage = ColourToCreate.ToString();
+}
+
+void SCCMWidget::SetBlueColour(float newValue)
+{
+    ColourToCreate.B = newValue;
+    ErrorMessage = ColourToCreate.ToString();
+}
+
+FSlateColor SCCMWidget::FetchColour() const
+{
+    return FSlateColor(ColourToCreate);
+}
+
+
+
+
+FReply SCCMWidget::CreateMaterial()
+{
+    FString BaseMaterialPath = TEXT("Material'/CCM/FlatColours/M_FlatColour.M_FlatColour'");
+    UMaterialInstanceConstant* OutputMaterial = nullptr;
+    UMaterial* BaseMaterial = LoadObject<UMaterial>(nullptr, *BaseMaterialPath);
+
+    // Load necessary modules
+    FAssetToolsModule& AssetToolsModule =
+        FModuleManager::Get().LoadModuleChecked<FAssetToolsModule>("AssetTools");
+
+    if (BaseMaterial)
+    {
+        UMaterialInstanceConstantFactoryNew* Factory =
+            NewObject<UMaterialInstanceConstantFactoryNew>();
+        Factory->InitialParent = BaseMaterial;
+
+        OutputMaterial = CastChecked<UMaterialInstanceConstant>(
+            AssetToolsModule.Get().CreateAsset(ColourName,
+                FPackageName::GetLongPackagePath(OutputPath),
+                UMaterialInstanceConstant::StaticClass(),
+                Factory));
+
+        OutputMaterial->SetVectorParameterValueEditorOnly(FName("Colour"), ColourToCreate);
+    }
+    return::FReply::Handled();
+}
 
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
