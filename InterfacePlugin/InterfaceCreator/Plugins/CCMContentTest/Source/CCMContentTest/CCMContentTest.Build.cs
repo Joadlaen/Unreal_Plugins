@@ -51,10 +51,15 @@ public class CCMContentTest : ModuleRules
 				"BlueprintGraph",
 				"PropertyEditor",
 				"EditorStyle",
-				"GraphEditor"
+				"GraphEditor",
+				"EditorSubsystem",
+				"UnrealEd",
+				"Engine",
+				"UMG",
+				"UMGEditor"
 				// ... add private dependencies that you statically link with here ...	
 			}
-			);
+            );
 		
 		
 		DynamicallyLoadedModuleNames.AddRange(

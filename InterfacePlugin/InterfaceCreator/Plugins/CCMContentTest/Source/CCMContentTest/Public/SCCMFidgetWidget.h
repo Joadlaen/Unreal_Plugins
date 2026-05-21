@@ -4,20 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
-#include "EdGraphSchema_K2.h"
 
 /**
  * 
  */
-class CCMCONTENTTEST_API SCCMTypeSelector : public SCompoundWidget
+class CCMCONTENTTEST_API SCCMFidgetWidget : public SCompoundWidget
 {
 public:
-	SLATE_BEGIN_ARGS(SCCMTypeSelector)
+	SLATE_BEGIN_ARGS(SCCMFidgetWidget)
 	{}
 	SLATE_END_ARGS()
 
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
+	FReply ButtonPress();
 };
-
-

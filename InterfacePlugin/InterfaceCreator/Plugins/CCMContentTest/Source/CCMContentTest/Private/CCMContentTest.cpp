@@ -8,8 +8,9 @@
 #include "Widgets/Layout/SBox.h"
 #include "Widgets/Text/STextBlock.h"
 #include "ToolMenus.h"
-#include "SCCMWidget.h"
+#include "SCCMCalculatorInterface.h"
 
+//#include "SCCMWidget.h"
 static const FName CCMContentTestTabName("CCMContentTest");
 
 #define LOCTEXT_NAMESPACE "FCCMContentTestModule"
@@ -67,7 +68,7 @@ TSharedRef<SDockTab> FCCMContentTestModule::OnSpawnPluginTab(const FSpawnTabArgs
 	return SNew(SDockTab)
 		.TabRole(ETabRole::NomadTab)
 		[
-			SNew(SCCMWidget)
+			SNew(SCCMCalculatorInterface)
 		];
 }
 

@@ -26,21 +26,11 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SCCMWidget::Construct(const FArguments& InArgs)
 {
 
-    CurrentType = InArgs._CurrentType;
-    OnTypeChanged = InArgs._OnTypeChanged;
-
-    //FContentBrowserModule& CB = FModuleManager::LoadModuleChecked<FContentBrowserModule>("ContentBrowser");
-    //IContentBrowserSingleton& CBS = CB.Get();
-    //FPathPickerConfig Config;
-
-    //Config.DefaultPath = "/Game";
-    //Config.OnPathSelected = FOnPathSelected::CreateSP(this, &SCCMWidget::OnFolderPicked);
-    //TSharedRef<SWidget> Picker = CBS.CreatePathPicker(Config);
 
     ChildSlot
         [
             SNew(SVerticalBox)
-                +SVerticalBox::Slot()
+                + SVerticalBox::Slot()
                 .Padding(10, 10)
                 .MaxHeight(30)
                 [
@@ -83,12 +73,12 @@ void SCCMWidget::Construct(const FArguments& InArgs)
                     SNew(STextBlock)
                         .Text(this, &SCCMWidget::DisplayErrors)
                 ]
-            +SVerticalBox::Slot()
+                + SVerticalBox::Slot()
                 .MaxHeight(30)
-                .Padding(10,10)
+                .Padding(10, 10)
                 [
                     SNew(SHorizontalBox)
-                        +SHorizontalBox::Slot()
+                        + SHorizontalBox::Slot()
                         .MaxWidth(150)
                         [
                             SNew(SSpinBox<float>)
@@ -131,64 +121,11 @@ void SCCMWidget::Construct(const FArguments& InArgs)
                         .OnClicked(this, &SCCMWidget::CreateMaterial)
                 ]
 
-            + SVerticalBox::Slot()
+                + SVerticalBox::Slot()
                 .Padding(10, 10)
-                SNew(SComboButton)
-                .ButtonContent()
-                [
-                    SNew(STextBlock)
-                        .Text_Lambda([this]()
-                            {
-                                return FText::FromName(CurrentType.Get().PinCategory);
-                            })
-                ]
-            .MenuContent()
-                [
-                    GenerateMenu()
-                ]
-
-                SNew(SCCMTypeSelector)
-                .CurrentType(this, &SCCMWidget::GetSelectedType)
-                .OnTypeChanged(this, &SCCMWidget::OnTypeChanged)
-
-        ];
-	
+    ];
 }
-
-TSharedRef<SWidget> SCCMTypeSelector::GenerateMenu()
-{
-    FMenuBuilder MenuBuilder(true, nullptr);
-
-    const UEdGraphSchema_K2* Schema = GetDefault<UEdGraphSchema_K2>();
-
-    // Add common pin types
-    TArray<FName> Categories;
-    Schema->GetVariableTypeCategories(Categories);
-
-    for (FName Category : Categories)
-    {
-        MenuBuilder.AddMenuEntry(
-            FText::FromName(Category),
-            FText::FromString(""),
-            FSlateIcon(),
-            FUIAction(FExecuteAction::CreateSP(this, &SCCMTypeSelector::OnTypePicked, Category))
-        );
-    }
-
-    return MenuBuilder.MakeWidget();
-}
-
-FReply SCCMTypeSelector::OnTypePicked(FName Category)
-{
-    SelectedType.PinCategory = Category;
-
-    if (OnTypeChanged.IsBound())
-    {
-        OnTypeChanged.Execute(SelectedType);
-    }
-
-    return FReply::Handled();
-}
+     
 
 
 
